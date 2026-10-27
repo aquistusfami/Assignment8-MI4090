@@ -1,0 +1,163 @@
+@startuml uml_a8
+
+!pragma layout smetana
+skinparam backgroundColor white
+skinparam defaultFontName DejaVu Sans
+skinparam dpi 300
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 45
+skinparam ranksep 45
+hide circle
+hide empty members
+
+enum DeviceStatus {
+  Available
+  Borrowed
+  UnderMaintenance
+}
+
+enum AlertSeverity
+{
+  Information
+  Warning
+  Critical
+}
+
+class DeviceStatusChangedEventArgs
+{
+  + DeviceId: string
+  + OldStatus: DeviceStatus
+  + NewStatus: DeviceStatus
+  + ChangedAt: DateTime
+  + DeviceStatusChangedEventArgs(\n deviceId: string, oldStatus: DeviceStatus,\n newStatus: DeviceStatus, changedAt: DateTime)
+}
+
+class DeviceAlertEventArgs 
+{
+  + DeviceId: string
+  + Message: string
+  + Severity: AlertSeverity
+  + OccurredAt: DateTime
+  + DeviceAlertEventArgs(\n deviceId: string, message: string,\n severity: AlertSeverity, occurredAt: DateTime)
+}
+
+abstract class TeachingDevice
+{
+  + Id: string
+  + Name: string
+  + Status: DeviceStatus
+  + StatusChanged: EventHandler\n<DeviceStatusChangedEventArgs>? <<event>>
+  + AlertRaised: EventHandler\n<DeviceAlertEventArgs>? <<event>>
+  # TeachingDevice(id: string, name: string)
+  + ChangeStatus(newStatus: DeviceStatus): void 
+  # RaisedAlert(message: string, severity: AlertSeverity) : void
+  # virtual OnStatusChanged(e: DeviceStatusChangedEventArgs) : void
+  # virtual OnAlertRaised(e: DeviceAlertEventArgs): void
+}
+
+class ProjectorRemote
+{
+  + BatteryLevel: int
+  + UpdateBatteryLevel(int newLevel): void
+}
+
+class AirConditionerRemote 
+{
+  + AssignedRoom: string
+  + IsResponsive: bool
+  + UpdateResponseState(bool isResponsive): void
+}
+
+class WirelessMicrophone
+{
+  + BatteryLevel: int 
+  + SignalQuality: int 
+  + UpdateBatteryLevel(int newLevel): void 
+  + UpdateSignalQuality(int newQuality): void
+}
+
+class ConsoleNotificationService
+{
+  + HandleAlert(sender: object?, e: DeviceAlertEventArgs): void
+}
+
+class DeviceAuditLogger
+{
+  - _entries: List<string>
+  + Entries: IReadOnlyList<string>
+  + HandleStatusChanged(sender: object?, e: DeviceStatusChangedEventArgs): void
+}
+
+class MaintenanceService
+{
+  - _requests: List<string>
+  + Requests: IReadOnlyList<string>
+  + HandleCriticalAlert(sender: object?, e: DeviceAlertEventArgs): void
+}
+
+class FilteredAlertSubscriber
+{
+  - _filter: AlertFilter
+  - _action: Action<DeviceAlertEventArgs>
+  + FilteredAlertSubscriber(filter: AlertFilter,\n Action<DeviceAlertEventArgs> action)
+  + HandleAlert(sender: object?, e: DeviceAlertEventArgs)
+}
+
+class DeviceMonitoringCoordinator
+{
+  - _devices: List<TeachingDevice>
+  - _notificationService: ConsoleNotificationService
+  - _auditLogger: DeviceAuditLogger
+  - _maintenanceService: MaintenanceService
+  + DeviceMonitoringCoordinator(\n devices: IEnumerable<TeachingDevice>, \n notificationService: ConsoleNotificationService,\n auditLogger: DeviceAuditLogger,\n maintenanceService: MaintenanceService)
+  + Subscribe(): void
+  + Unsubscribe(): void
+  + Dispose(): void
+}
+
+class InvalidDeviceReadingException
+{
+  + DeviceId: string
+  + InvalidValue: int
+}
+interface IDisposable{
+
+}
+
+class EventArgs
+{
+
+}
+
+class Exception
+{
+
+}
+
+class AlertFilter <<delegate>> {
+  + Invoke(alert: DeviceAlertEventArgs): bool
+}
+FilteredAlertSubscriber --> AlertFilter
+TeachingDevice <|-- ProjectorRemote
+TeachingDevice <|-- AirConditionerRemote
+TeachingDevice <|-- WirelessMicrophone
+
+EventArgs <|-- DeviceStatusChangedEventArgs
+EventArgs <|-- DeviceAlertEventArgs
+Exception <|-- InvalidDeviceReadingException
+
+IDisposable <|.. DeviceMonitoringCoordinator
+TeachingDevice ..> DeviceStatus: <<use>>
+DeviceAlertEventArgs ..> AlertSeverity: <<use>>
+DeviceStatusChangedEventArgs ..> DeviceStatus: <<use>>
+
+DeviceMonitoringCoordinator --> ConsoleNotificationService
+DeviceMonitoringCoordinator o-- TeachingDevice
+DeviceMonitoringCoordinator --> DeviceAuditLogger
+DeviceMonitoringCoordinator --> MaintenanceService
+
+ConsoleNotificationService ..> TeachingDevice : <<subscribes>>
+DeviceAuditLogger ..> TeachingDevice : <<subscribes>>
+MaintenanceService ..> TeachingDevice : <<subscribes>>
+@enduml
