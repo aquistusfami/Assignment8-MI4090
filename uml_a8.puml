@@ -51,7 +51,7 @@ abstract class TeachingDevice
   + AlertRaised: EventHandler\n<DeviceAlertEventArgs>? <<event>>
   # TeachingDevice(id: string, name: string)
   + ChangeStatus(newStatus: DeviceStatus): void 
-  # RaisedAlert(message: string, severity: AlertSeverity) : void
+  # RaiseAlert(message: string, severity: AlertSeverity) : void
   # virtual OnStatusChanged(e: DeviceStatusChangedEventArgs) : void
   # virtual OnAlertRaised(e: DeviceAlertEventArgs): void
 }
@@ -59,13 +59,15 @@ abstract class TeachingDevice
 class ProjectorRemote
 {
   + BatteryLevel: int
-  + UpdateBatteryLevel(int newLevel): void
+  + ProjectorRemote(id: string, name: string)
+  + UpdateBatteryLevel(newLevel: int): void
 }
 
 class AirConditionerRemote 
 {
   + AssignedRoom: string
   + IsResponsive: bool
+  + AirConditionerRemote(id: string, name: string,\n assignedRoom: string)
   + UpdateResponseState(bool isResponsive): void
 }
 
@@ -73,20 +75,21 @@ class WirelessMicrophone
 {
   + BatteryLevel: int 
   + SignalQuality: int 
-  + UpdateBatteryLevel(int newLevel): void 
-  + UpdateSignalQuality(int newQuality): void
+  + WirelessMicrophone(id: string, name: string)
+  + UpdateBatteryLevel(newLevel: int): void 
+  + UpdateSignalQuality(newQuality: int): void
 }
 
 class ConsoleNotificationService
 {
-  + HandleAlert(sender: object?, e: DeviceAlertEventArgs): void
+  + HandleAlert(sender: object?,\n e: DeviceAlertEventArgs): void
 }
 
 class DeviceAuditLogger
 {
   - _entries: List<string>
   + Entries: IReadOnlyList<string>
-  + HandleStatusChanged(sender: object?, e: DeviceStatusChangedEventArgs): void
+  + HandleStatusChanged(sender: object?,\n e: DeviceStatusChangedEventArgs): void
 }
 
 class MaintenanceService
@@ -100,8 +103,8 @@ class FilteredAlertSubscriber
 {
   - _filter: AlertFilter
   - _action: Action<DeviceAlertEventArgs>
-  + FilteredAlertSubscriber(filter: AlertFilter,\n Action<DeviceAlertEventArgs> action)
-  + HandleAlert(sender: object?, e: DeviceAlertEventArgs)
+  + FilteredAlertSubscriber(filter: AlertFilter,\n action: Action<DeviceAlertEventArgs>)
+  + HandleAlert(sender: object?, e: DeviceAlertEventArgs): void
 }
 
 class DeviceMonitoringCoordinator
@@ -122,7 +125,7 @@ class InvalidDeviceReadingException
   + InvalidValue: int
 }
 interface IDisposable{
-
+  + Dispose(): void
 }
 
 class EventArgs
@@ -153,11 +156,16 @@ DeviceAlertEventArgs ..> AlertSeverity: <<use>>
 DeviceStatusChangedEventArgs ..> DeviceStatus: <<use>>
 
 DeviceMonitoringCoordinator --> ConsoleNotificationService
-DeviceMonitoringCoordinator o-- TeachingDevice
+DeviceMonitoringCoordinator --> TeachingDevice
 DeviceMonitoringCoordinator --> DeviceAuditLogger
 DeviceMonitoringCoordinator --> MaintenanceService
 
-ConsoleNotificationService ..> TeachingDevice : <<subscribes>>
-DeviceAuditLogger ..> TeachingDevice : <<subscribes>>
-MaintenanceService ..> TeachingDevice : <<subscribes>>
+TeachingDevice ..> DeviceStatusChangedEventArgs : publishes
+TeachingDevice ..> DeviceAlertEventArgs : publishes
+
+ConsoleNotificationService ..> DeviceAlertEventArgs : handles
+MaintenanceService ..> DeviceAlertEventArgs : handles
+DeviceAuditLogger ..> DeviceStatusChangedEventArgs : handles
+FilteredAlertSubscriber ..> DeviceAlertEventArgs : handles
+AlertFilter ..> DeviceAlertEventArgs
 @enduml
