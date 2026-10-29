@@ -2,7 +2,7 @@
 // 202418988
 // Nguyễn Văn Thế
 /****************/
-namespace Assignment8_MI4090;
+namespace Assignment8_MI4090.Devices;
 
 public abstract class TeachingDevice
 {
@@ -39,7 +39,7 @@ public abstract class TeachingDevice
   {
     StatusChanged?.Invoke(this, e);
   }
-  protected void OnAlertRaised(DeviceAlertEventArgs e)
+  protected virtual void OnAlertRaised(DeviceAlertEventArgs e)
   {
     AlertRaised?.Invoke(this, e);
   }
