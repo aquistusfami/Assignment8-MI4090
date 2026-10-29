@@ -20,6 +20,27 @@ public abstract class TeachingDevice
   }
   public void ChangeStatus(DeviceStatus newStatus)
   {
-    
+    if(newStatus == Status)
+    {
+      return;
+    }
+
+    DeviceStatus oldStatus = Status;
+    Status = newStatus;
+
+    OnStatusChanged(new DeviceStatusChangedEventArgs(Id, oldStatus, newStatus, DateTime.Now));
+  }
+
+  protected void RaiseAlert(string message, AlertSeverity severity)
+  {
+    OnAlertRaised(new DeviceAlertEventArgs(Id, message, severity, DateTime.Now));
+  }
+  protected virtual void OnStatusChanged(DeviceStatusChangedEventArgs e)
+  {
+    StatusChanged?.Invoke(this, e);
+  }
+  protected void OnAlertRaised(DeviceAlertEventArgs e)
+  {
+    AlertRaised?.Invoke(this, e);
   }
 }
