@@ -19,7 +19,7 @@ public class ProjectorRemote : TeachingDevice
     int oldBattery = BatteryLevel;
     BatteryLevel = newLevel;
 
-    if(newLevel == 0 || oldBattery != 0)
+    if(newLevel == 0 && oldBattery != 0)
     {
       RaiseAlert("<!> Điều khiển máy chiếu hết pin", AlertSeverity.Critical);
     }
