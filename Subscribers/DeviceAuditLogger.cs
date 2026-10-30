@@ -10,7 +10,7 @@ public class DeviceAuditLogger
 {
   private readonly List<string> entries = new();
 
-  private IReadOnlyList<string> Entries => entries.AsReadOnly();
+  public IReadOnlyList<string> Entries => entries.AsReadOnly();
 
   public void HandleStatusChanged(object? sender, DeviceStatusChangedEventArgs e)
   {

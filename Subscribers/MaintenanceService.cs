@@ -9,7 +9,7 @@ using Assignment8_MI4090.Events;
 public class MaintenanceService
 {
   private readonly List<string> requests = new();
-  private IReadOnlyList<string> Requests => requests.AsReadOnly();
+  public IReadOnlyList<string> Requests => requests.AsReadOnly();
 
   public void HandleCriticalAlert(object? sender, DeviceAlertEventArgs e)
   {

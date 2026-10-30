@@ -16,7 +16,7 @@ public class AirConditionerRemote : TeachingDevice
 
   public void UpdateResponseState(bool isResponsive)
   {
-    if(IsResponsive = isResponsive)
+    if(IsResponsive == isResponsive)
     {
       return;
     }
