@@ -3,6 +3,7 @@
 // Nguyễn Văn Thế
 /****************/
 namespace Assignment8_MI4090.Devices;
+using Assignment8_MI4090.Enums;
 
 public abstract class TeachingDevice
 {

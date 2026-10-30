@@ -4,6 +4,7 @@
 /****************/
 namespace Assignment8_MI4090.Devices;
 using Assignment8_MI4090.Exceptions;
+using Assignment8_MI4090.Enums;
 
 public class WirelessMicrophone : TeachingDevice
 {

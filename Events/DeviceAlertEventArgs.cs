@@ -3,7 +3,7 @@
 // Nguyễn Văn Thế
 /****************/
 namespace Assignment8_MI4090;
-
+using Assignment8_MI4090.Enums;
 public class DeviceAlertEventArgs : EventArgs
 {
   public string DeviceId { get; }
