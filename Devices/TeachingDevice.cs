@@ -4,6 +4,7 @@
 /****************/
 namespace Assignment8_MI4090.Devices;
 using Assignment8_MI4090.Enums;
+using Assignment8_MI4090.Events;
 
 public abstract class TeachingDevice
 {

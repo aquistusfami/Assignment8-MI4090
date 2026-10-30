@@ -3,7 +3,7 @@
 // Nguyễn Văn Thế
 /****************/
 namespace Assignment8_MI4090.Devices;
-
+using Assignment8_MI4090.Enums;
 public class AirConditionerRemote : TeachingDevice
 {
   public string AssignedRoom { get; }
