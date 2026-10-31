@@ -4,6 +4,9 @@
 /****************/
 namespace Assignment8_MI4090.Devices;
 using Assignment8_MI4090.Enums;
+/// <summary>
+/// Lớp điều khiển điều hòa kế thừa TeachingDevice
+/// </summary>
 public class AirConditionerRemote : TeachingDevice
 {
   public string AssignedRoom { get; }

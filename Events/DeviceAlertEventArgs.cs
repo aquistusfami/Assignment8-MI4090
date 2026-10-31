@@ -4,6 +4,10 @@
 /****************/
 namespace Assignment8_MI4090.Events;
 using Assignment8_MI4090.Enums;
+
+/// <summary>
+/// Lớp sự kiện thiết bị cảnh cáo
+/// </summary>
 public class DeviceAlertEventArgs : EventArgs
 {
   public string DeviceId { get; }

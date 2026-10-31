@@ -5,7 +5,9 @@
 namespace Assignment8_MI4090.Devices;
 using Assignment8_MI4090.Exceptions;
 using Assignment8_MI4090.Enums;
-
+/// <summary>
+/// Lớp máy chiếu kế thừa TeachingDevice
+/// </summary>
 public class ProjectorRemote : TeachingDevice
 {
   public int BatteryLevel { get; private set; } = 100;
